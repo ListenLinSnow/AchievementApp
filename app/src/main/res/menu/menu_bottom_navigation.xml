@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_ongoing"
+        android:title="@string/menu_bottom_ongoing"
+        android:icon="@mipmap/ic_hourglass"/>
+
+    <item
+        android:id="@+id/action_abandoned"
+        android:title="@string/menu_bottom_abandoned"
+        android:icon="@mipmap/ic_abandon"/>
+
+    <item
+        android:id="@+id/action_completed"
+        android:title="@string/menu_bottom_completed"
+        android:icon="@mipmap/ic_complete"/>
+
+    <item
+        android:id="@+id/action_summary"
+        android:title="@string/menu_bottom_summary"
+        android:icon="@mipmap/ic_plan"/>
+
+</menu>

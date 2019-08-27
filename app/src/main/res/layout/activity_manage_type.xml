@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_eight"
+        android:background="@color/md_blue_500"
+        android:elevation="@dimen/four">
+
+        <ImageView
+            android:id="@+id/iv_manage_type_back"
+            android:layout_width="@dimen/forty_eight"
+            android:layout_height="@dimen/forty_eight"
+            android:padding="@dimen/ten"
+            android:src="@mipmap/ic_arrow_back_white"
+            android:foreground="?attr/selectableItemBackground"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/iv_manage_type_back"
+            android:gravity="center"
+            android:text="分类管理"
+            android:textColor="@color/md_white"
+            android:textSize="@dimen/tv_sixteen"/>
+
+        <ImageView
+            android:id="@+id/iv_manage_type_done"
+            android:layout_width="@dimen/forty_eight"
+            android:layout_height="@dimen/forty_eight"
+            android:padding="@dimen/ten"
+            android:src="@mipmap/ic_done"
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/eight"
+        android:paddingLeft="@dimen/sixteen"
+        android:alpha="0.87"
+        android:textSize="@dimen/tv_twelve"
+        android:text="长按可移动类别的顺序"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_manage_type_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

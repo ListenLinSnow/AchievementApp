@@ -1,0 +1,50 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/md_blue_300</item>
+        <item name="colorPrimaryDark">@color/md_blue_700</item>
+        <item name="colorAccent">@color/md_blue_500</item>
+        <!--<item name="android:fontFamily">@font/font_menu</item>-->
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="launcher_activity_style" parent="@style/AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowDisablePreview">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- 列表项的透明度显示 -->
+    <style name="SecondaryContent">
+        <item name="android:textColor">@color/md_black</item>
+        <item name="android:alpha">0.87</item>
+    </style>
+
+    <!-- 副标题等的透明度显示 -->
+    <style name="SubtitleContent">
+        <item name="android:textColor">@color/md_black</item>
+        <item name="android:alpha">0.54</item>
+    </style>
+
+    <!-- 扁平化按钮属性设置 -->
+    <style name="FlatButton" parent="Theme.AppCompat.Light">
+        <item name="buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
+        <item name="android:textColor">@color/md_blue_500</item>
+        <item name="colorControlHighlight">@color/md_blue_200</item>
+        <item name="colorAccent">@color/md_blue_700</item>
+    </style>
+
+    <!-- 浮动按钮(RaisedButton)属性设置(是普通按钮,不是FloatingActionBar) -->
+    <style name="FloatButton" parent="Theme.AppCompat.Light">
+        <item name="buttonStyle">@style/Widget.AppCompat.Button</item>
+        <item name="android:textColor">@color/md_white</item>
+        <item name="colorControlHighlight">@color/md_blue_800</item>
+        <item name="android:colorButtonNormal">@color/md_blue_500</item>
+    </style>
+    
+</resources>

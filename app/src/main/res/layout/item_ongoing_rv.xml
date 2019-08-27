@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sml_item_ongoing"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/seventy_two"
+    android:background="@color/md_grey_100"
+    android:layout_marginBottom="@dimen/eight">
+
+    <RelativeLayout
+        android:id="@+id/rl_item_ongoing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground">
+
+        <CheckBox
+            android:id="@+id/cb_item_ongoing_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/sixteen"
+            android:layout_centerVertical="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/seventy_two">
+
+            <TextView
+                android:id="@+id/tv_item_ongoing_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="title"
+                android:textSize="@dimen/tv_sixteen"
+                android:alpha="0.87"/>
+
+            <TextView
+                android:id="@+id/tv_item_ongoing_start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="startDate"
+                android:textSize="@dimen/tv_fourteen"
+                android:alpha="0.54"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_item_ongoing_abandon"
+        android:layout_width="@dimen/seventy_two"
+        android:layout_height="@dimen/seventy_two"
+        android:background="@color/md_grey_500"
+        android:textColor="@color/md_white"
+        android:gravity="center"
+        android:text="弃坑"/>
+
+    <!--<View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one"
+        android:background="@color/md_grey_200" />-->
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

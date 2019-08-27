@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="zero">0dp</dimen>
+    <dimen name="one">1dp</dimen>
+    <dimen name="four">4dp</dimen>
+    <dimen name="eight">8dp</dimen>
+    <dimen name="ten">10dp</dimen>
+    <dimen name="twelve">12dp</dimen>
+    <dimen name="sixteen">16dp</dimen>
+    <dimen name="twenty">20dp</dimen>
+    <dimen name="twenty_four">24dp</dimen>
+    <dimen name="thirty">30dp</dimen>
+    <dimen name="thirty_six">36dp</dimen>
+    <dimen name="forty">40dp</dimen>
+    <dimen name="forty_eight">48dp</dimen>
+    <dimen name="fifty_two">52dp</dimen>
+    <dimen name="fifty_six">56dp</dimen>
+    <dimen name="sixty_four">64dp</dimen>
+    <dimen name="seventy_two">72dp</dimen>
+    <dimen name="eighty">80dp</dimen>
+    <dimen name="one_hundred">100dp</dimen>
+    <dimen name="one_hundred_twenty_eight">128dp</dimen>
+    <dimen name="one_hundred_forty">140dp</dimen>
+    <dimen name="one_hundred_sixty">160dp</dimen>
+    <dimen name="one_hundred_eighty">180dp</dimen>
+    <dimen name="three_hundred">300dp</dimen>
+
+    <dimen name="tv_ten">10sp</dimen>
+    <dimen name="tv_twelve">12sp</dimen>
+    <dimen name="tv_fourteen">14sp</dimen>
+    <dimen name="tv_sixteen">16sp</dimen>
+    <dimen name="tv_twenty">20sp</dimen>
+
+</resources>

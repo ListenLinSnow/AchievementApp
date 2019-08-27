@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_item_single_choose"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/forty_eight"
+    android:foreground="?attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RadioButton
+            android:id="@+id/rb_item_single_choose_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/sixteen"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:id="@+id/iv_item_single_choose"
+            android:layout_width="@dimen/twenty_four"
+            android:layout_height="@dimen/twenty_four"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/sixteen"
+            android:layout_centerVertical="true"/>
+        
+        <TextView
+            android:id="@+id/tv_item_single_choose_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/seventy_two"
+            android:layout_centerVertical="true"
+            android:text="阅读"
+            android:textSize="@dimen/tv_sixteen"/>
+        
+    </RelativeLayout>
+
+</LinearLayout>

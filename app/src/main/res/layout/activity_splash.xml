@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_splash_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/one_hundred"
+        android:textSize="@dimen/tv_twenty"
+        android:text="距离年末还有   天"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_splash_info_first_word"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eighty"
+            android:gravity="center"
+            android:text="每记录一件完成的事情"
+            android:textSize="@dimen/tv_twenty"
+            android:alpha="0"/>
+
+        <TextView
+            android:id="@+id/tv_splash_info_second_word"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eighty"
+            android:gravity="center"
+            android:text="都是对自己的努力的肯定"
+            android:textSize="@dimen/tv_twenty"
+            android:alpha="0"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

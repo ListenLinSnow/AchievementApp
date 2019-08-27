@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item_main_slide"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/forty_eight"
+    android:foreground="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/iv_item_main_slide_icon"
+        android:layout_width="@dimen/twenty_four"
+        android:layout_height="@dimen/twenty_four"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/sixteen"
+        android:theme="@style/SecondaryContent" />
+
+    <TextView
+        android:id="@+id/tv_item_main_slide_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/seventy_two"
+        android:textSize="@dimen/tv_fourteen"
+        android:theme="@style/SubtitleContent" />
+
+</RelativeLayout>

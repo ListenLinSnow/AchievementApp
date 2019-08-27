@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_eight"
+        android:background="@color/md_blue_500"
+        android:elevation="@dimen/four">
+
+        <ImageView
+            android:id="@+id/iv_setting_type_back"
+            android:layout_width="@dimen/forty_eight"
+            android:layout_height="@dimen/forty_eight"
+            android:padding="@dimen/ten"
+            android:src="@mipmap/ic_arrow_back_white"
+            android:foreground="?attr/selectableItemBackground"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/iv_setting_type_back"
+            android:gravity="center"
+            android:text="设置"
+            android:textColor="@color/md_white"
+            android:textSize="@dimen/tv_sixteen"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_eight"
+        android:layout_marginTop="@dimen/eight">
+
+        <ImageView
+            android:layout_width="@dimen/twenty_four"
+            android:layout_height="@dimen/twenty_four"
+            android:src="@mipmap/ic_font"
+            android:layout_marginLeft="@dimen/sixteen"
+            android:layout_centerVertical="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/seventy_two">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="启用APP自带字体"
+                android:theme="@style/SecondaryContent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设置后重启app生效"
+                android:layout_centerVertical="true"
+                android:theme="@style/SubtitleContent"
+                android:textSize="@dimen/tv_twelve"/>
+
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/switch_setting_app_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/sixteen"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

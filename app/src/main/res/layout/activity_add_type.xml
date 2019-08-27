@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_eight"
+        android:background="@color/md_blue_500"
+        android:elevation="@dimen/four">
+
+        <ImageView
+            android:id="@+id/iv_add_type_back"
+            android:layout_width="@dimen/forty_eight"
+            android:layout_height="@dimen/forty_eight"
+            android:padding="@dimen/ten"
+            android:src="@mipmap/ic_arrow_back_white"
+            android:foreground="?attr/selectableItemBackground"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/iv_add_type_back"
+            android:gravity="center"
+            android:text="添加新分类"
+            android:textColor="@color/md_white"
+            android:textSize="@dimen/tv_sixteen"/>
+
+        <ImageView
+            android:id="@+id/iv_add_type_done"
+            android:layout_width="@dimen/forty_eight"
+            android:layout_height="@dimen/forty_eight"
+            android:padding="@dimen/ten"
+            android:src="@mipmap/ic_done"
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et_add_type_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_eight"
+        android:background="@null"
+        android:hint="输入新分类名称"
+        android:maxLines="3"
+        android:paddingTop="@dimen/eight"
+        android:paddingBottom="@dimen/eight"
+        android:paddingLeft="@dimen/sixteen"
+        android:paddingRight="@dimen/sixteen"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one"
+        android:background="@color/md_grey_200"
+        android:layout_marginLeft="@dimen/sixteen"/>
+
+    <LinearLayout
+        android:id="@+id/ll_add_type_new_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground"
+        android:paddingTop="@dimen/eight"
+        android:paddingBottom="@dimen/eight"
+        android:paddingLeft="@dimen/sixteen"
+        android:paddingRight="@dimen/sixteen">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="自定义图标"
+            android:textSize="@dimen/tv_sixteen"/>
+
+        <ImageView
+            android:id="@+id/iv_add_type_icon"
+            android:layout_width="@dimen/thirty_six"
+            android:layout_height="@dimen/thirty_six"
+            android:layout_marginLeft="@dimen/sixteen"
+            android:src="@mipmap/ic_pic"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

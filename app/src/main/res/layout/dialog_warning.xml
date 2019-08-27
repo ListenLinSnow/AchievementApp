@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_dialog_warning_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/twenty_four"
+        android:layout_marginLeft="@dimen/twenty_four"
+        android:textStyle="bold"
+        android:textColor="@color/md_black"
+        android:textSize="@dimen/tv_sixteen"/>
+
+    <TextView
+        android:id="@+id/tv_dialog_warning_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/twenty_four"
+        android:layout_marginRight="@dimen/twenty_four"
+        android:layout_marginTop="@dimen/twenty"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/eight"
+        android:layout_marginTop="@dimen/twenty_four">
+
+        <Button
+            android:id="@+id/btn_dialog_warning_sure"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/thirty_six"
+            android:minWidth="@dimen/sixty_four"
+            android:layout_alignParentRight="true"
+            android:text="确定"
+            android:theme="@style/FlatButton"/>
+
+        <Button
+            android:id="@+id/btn_dialog_warning_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/thirty_six"
+            android:minWidth="@dimen/sixty_four"
+            android:layout_toLeftOf="@id/btn_dialog_warning_sure"
+            android:layout_marginRight="@dimen/eight"
+            android:text="取消"
+            android:theme="@style/FlatButton"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

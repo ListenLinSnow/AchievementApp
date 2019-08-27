@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/eight">
+
+    <ImageView
+        android:id="@+id/iv_item_icon"
+        android:layout_width="@dimen/forty_eight"
+        android:layout_height="@dimen/forty_eight"
+        android:adjustViewBounds="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
+</LinearLayout>

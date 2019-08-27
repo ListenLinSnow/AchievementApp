@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">成就APP</string>
+
+    <string name="dialog_username_title">起一个帅气的名字</string>
+    <!-- <string name="dialog_autograph_title">心配するな，お前ならできる</string> -->
+    <string name="dialog_autograph_title">写一个帅气的签名</string>
+
+    <string name="update_type_name">更改分类名称</string>
+
+    <string name="category_title">分类</string>
+    <string name="category_reading">阅读</string>
+    <string name="category_video">影视</string>
+    <string name="category_game">游戏</string>
+    <string name="category_code">代码</string>
+    <string name="category_more">其他</string>
+    
+    <string name="menu_bottom_ongoing">进行中</string>
+    <string name="menu_bottom_abandoned">已弃坑</string>
+    <string name="menu_bottom_completed">已完成</string>
+    <string name="menu_bottom_summary">总结</string>
+
+    <string name="motto">心配するな，お前ならできる</string>
+    <string name="copyright">Copyright@2019 QingMi All Rights Reserved.</string>
+
+</resources>

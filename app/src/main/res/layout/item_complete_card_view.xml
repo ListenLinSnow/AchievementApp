@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground">
+
+    <com.github.vipulasri.timelineview.TimelineView
+        android:id="@+id/timeline_item_complete"
+        android:layout_width="@dimen/thirty_six"
+        android:layout_height="match_parent"
+        app:lineWidth="@dimen/one"
+        app:markerInCenter="true"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_item_complete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eight"
+        android:foreground="?attr/selectableItemBackground"
+        android:stateListAnimator="@drawable/lift_on_touch"
+        android:clickable="true"
+        tools:targetApi="LOLLIPOP"
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="true"
+        app:cardPreventCornerOverlap="false">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/eight"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_item_complete_time_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="month"
+                    android:textSize="@dimen/ten"/>
+
+                <TextView
+                    android:id="@+id/tv_item_complete_time_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="day"
+                    android:textSize="@dimen/twenty"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/four"
+                android:layout_marginLeft="@dimen/eight"
+                android:layout_marginRight="@dimen/eight"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_item_complete_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="title"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:alpha="0.87"
+                    android:textSize="@dimen/tv_sixteen"/>
+
+                <TextView
+                    android:id="@+id/tv_item_complete_remarks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_item_complete_title"
+                    android:text="remarks"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:alpha="0.54"
+                    android:textSize="@dimen/tv_twelve"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
