@@ -54,8 +54,7 @@
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/twenty_four"
-            android:text="@string/copyright"/>
+            android:layout_marginBottom="@dimen/twenty_four"/>
 
     </RelativeLayout>
 

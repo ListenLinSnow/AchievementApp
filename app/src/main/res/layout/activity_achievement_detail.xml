@@ -19,19 +19,19 @@
             android:foreground="?attr/selectableItemBackground"/>
 
         <TextView
-            android:id="@+id/tv_achievement_detail_category"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/iv_achievement_detail_back"
-            android:paddingLeft="@dimen/twenty_four"
-            android:paddingRight="@dimen/twenty_four"
-            android:gravity="center"
-            android:text="类别"
-            android:textColor="@color/md_white"
-            android:textSize="@dimen/tv_twenty"
-            android:textStyle="bold"
-            android:drawableRight="@mipmap/ic_arrow_down_white"
-            android:foreground="?attr/selectableItemBackground"/>
+                android:id="@+id/tv_achievement_detail_category"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="类别"
+                android:textColor="@color/md_white"
+                android:textSize="@dimen/tv_twenty"
+                android:textStyle="bold"
+                android:drawableRight="@mipmap/ic_arrow_down_white_small"
+                android:layout_toRightOf="@id/iv_achievement_detail_back"
+                android:paddingLeft="@dimen/twenty_four"
+                android:paddingRight="@dimen/twenty_four"
+                android:foreground="?attr/selectableItemBackground"/>
 
         <ImageView
             android:id="@+id/iv_achievement_detail_delete"
@@ -55,7 +55,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -69,7 +69,8 @@
                 android:layout_height="wrap_content"
                 android:text="起始日期"
                 android:textSize="@dimen/tv_sixteen"
-                android:foreground="?attr/selectableItemBackground"/>
+                android:foreground="?attr/selectableItemBackground"
+                android:layout_centerVertical="true"/>
 
             <TextView
                 android:id="@+id/tv_achievement_detail_separator_date"
@@ -78,7 +79,8 @@
                 android:text="—"
                 android:textStyle="bold"
                 android:layout_marginLeft="@dimen/one_hundred"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:layout_centerVertical="true"/>
 
             <TextView
                 android:id="@+id/tv_achievement_detail_end_date"
@@ -88,7 +90,8 @@
                 android:textSize="@dimen/tv_sixteen"
                 android:layout_marginLeft="@dimen/one_hundred_forty"
                 android:foreground="?attr/selectableItemBackground"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:layout_centerVertical="true"/>
 
         </RelativeLayout>
 
@@ -116,10 +119,11 @@
         <EditText
             android:id="@+id/et_achievement_detail_remark"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="@dimen/sixteen"
             android:background="@null"
-            android:hint="备注"/>
+            android:hint="备注"
+            android:gravity="start"/>
 
     </LinearLayout>
 

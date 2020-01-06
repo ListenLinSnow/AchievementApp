@@ -1,5 +1,7 @@
 package com.example.lc.achievementapp.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -59,6 +61,20 @@ public class OngoingFragment extends Fragment{
     List<AchievementType> typeList = null;
     List<SingleChooseItem<AchievementType>> itemList = null;
 
+    private Context context;
+    
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = (Context) activity;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,7 +92,7 @@ public class OngoingFragment extends Fragment{
     }
 
     private void init(){
-        LocalData.initDBHelper(getContext());
+        LocalData.initDBHelper(context.getApplicationContext());
         typeList = LocalData.getTypeListData();
 
         //添加分类列表
@@ -88,11 +104,11 @@ public class OngoingFragment extends Fragment{
         achievementList = new ArrayList<>();
         //默认获取所有类型的成就
         refreshData(lastType);
-        adapter = new OngoingItemAdapter(getContext(), achievementList);
+        adapter = new OngoingItemAdapter(context, achievementList);
         adapter.setOnItemClickListener(new OngoingItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(getContext(), AchievementDetailActivity.class);
+                Intent intent = new Intent(context, AchievementDetailActivity.class);
                 intent.putExtra("action", "edit");
                 intent.putExtra("achievement", achievementList.get(position));
                 startActivity(intent);
@@ -110,7 +126,7 @@ public class OngoingFragment extends Fragment{
             @Override
             public void onItemAbandonClick(int position) {
                 //弃坑操作
-                LocalData.initDBHelper(getContext());
+                LocalData.initDBHelper(context.getApplicationContext());
                 if(LocalData.updateAchiDataStatus(achievementList.get(position).getId(), TimeUtil.getDateTime(), AchievementStatus.ABANDONED)) {
                     EventBus.getDefault().post(new ListNotify(true, false));
                     showToast("已弃坑");
@@ -119,7 +135,7 @@ public class OngoingFragment extends Fragment{
                 }
             }
         });
-        rvOngoing.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvOngoing.setLayoutManager(new LinearLayoutManager(context));
         rvOngoing.setItemAnimator(new DefaultItemAnimator());
         rvOngoing.setAdapter(adapter);
     }
@@ -130,7 +146,7 @@ public class OngoingFragment extends Fragment{
     private void refreshData(int type){
         achievementList.clear();
         //添加 进行中 的成就
-        LocalData.initDBHelper(getContext());
+        LocalData.initDBHelper(context.getApplicationContext());
         List<Achievement> list = LocalData.getAchiData(type, DBHelper.START_DATE_COLUMN + " desc");
         if(list.size() > 0) {
             Achievement achievement = null;
@@ -158,15 +174,15 @@ public class OngoingFragment extends Fragment{
         switch (view.getId()){
             case R.id.fab_fragment_ongoing:
                 //添加新成就
-                Intent intent = new Intent(getContext(), AchievementDetailActivity.class);
-                intent.putExtra("action", "new");
+                Intent intent = new Intent(context, AchievementDetailActivity.class);
+                intent.putExtra("action", "ongoing");
                 startActivity(intent);
                 break;
         }
     }
 
     private void showToast(String message){
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     /**

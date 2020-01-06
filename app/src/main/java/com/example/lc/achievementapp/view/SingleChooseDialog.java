@@ -38,7 +38,7 @@ public class SingleChooseDialog extends Dialog {
 
     private Context context;
 
-    int selectedPosition = 0;
+    int selectedPosition = -1;
 
     private OnSureBtnClickListener onSureBtnClickListener;
     private OnCancelBtnClickListener onCancelBtnClickListener;

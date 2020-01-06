@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/tv_fragment_intend_type_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/eight"
+            android:paddingLeft="@dimen/sixteen"
+            android:paddingBottom="@dimen/eight"
+            android:alpha="0.87"
+            android:textSize="@dimen/tv_twelve"
+            android:text="info"/>
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_fragment_intend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_fragment_intend_type_info" />
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_fragment_intend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/sixteen"
+            android:clickable="true"
+            android:src="@mipmap/ic_add_white"/>
+
+</RelativeLayout>

@@ -54,6 +54,7 @@ public class NormalInputDialog extends Dialog {
 
     public void setContent(String content){
         etContent.setText(content);
+        etContent.setSelection(content.length());
     }
 
     @OnClick({R.id.btn_dialog_normal_input_cancel, R.id.btn_dialog_normal_input_sure})

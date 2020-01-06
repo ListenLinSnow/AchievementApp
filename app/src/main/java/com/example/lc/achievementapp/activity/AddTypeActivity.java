@@ -59,7 +59,7 @@ public class AddTypeActivity extends AppCompatActivity {
 
     int size = 0;
 
-    String iconPath = null;
+    String iconPath = null, typePath = null;
     String lastIcon = null;
 
     private static final int PICK_IMG = 1;
@@ -77,7 +77,8 @@ public class AddTypeActivity extends AppCompatActivity {
     private void init(){
         size = getIntent().getIntExtra("size", 0);
 
-        iconPath = Constant.TYPE_PATH + File.separator + TimeUtil.getLocalTimeForFileName() + ".jpg";
+        typePath = getFilesDir() + File.separator + "type";
+        iconPath = typePath + File.separator + TimeUtil.getLocalTimeForFileName() + ".jpg";
     }
 
     @OnClick({R.id.iv_add_type_back, R.id.iv_add_type_done, R.id.ll_add_type_new_icon})
@@ -125,7 +126,7 @@ public class AddTypeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
                 //设置图标名称
-                iconPath = Constant.TYPE_PATH + File.separator + TimeUtil.getLocalTimeForFileName() + ".jpg";
+                iconPath = typePath + File.separator + TimeUtil.getLocalTimeForFileName() + ".jpg";
                 //挑选图标
                 Matisse.from(AddTypeActivity.this)
                         .choose(MimeType.ofImage())
@@ -160,7 +161,7 @@ public class AddTypeActivity extends AppCompatActivity {
      * 保存新分类
      */
     private void saveNewType(){
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
 
         if(lastIcon != null) {
             LocalData.insertTypeData(lastIcon, etName.getText().toString(), size);

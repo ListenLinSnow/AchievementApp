@@ -94,7 +94,7 @@ public class ManageTypeActivity extends AppCompatActivity {
      * 刷新数据
      */
     private void refreshData(){
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
         typeList.clear();
         typeList.addAll(LocalData.getTypeListData());
 
@@ -177,7 +177,8 @@ public class ManageTypeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
                 //设置图标名称
-                iconPath = Constant.TYPE_PATH + File.separator + TimeUtil.getLocalTimeForFileName() + ".jpg";
+                String typePath = getFilesDir() + File.separator + "type";
+                iconPath = typePath + File.separator + TimeUtil.getLocalTimeForFileName() + ".jpg";
                 //挑选图标
                 Matisse.from(ManageTypeActivity.this)
                         .choose(MimeType.ofImage())
@@ -295,7 +296,7 @@ public class ManageTypeActivity extends AppCompatActivity {
      * 保存 类型 权重
      */
     private void saveTypeWeight(){
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
         for (int i = 0; i < typeList.size(); i++){
             AchievementType type = typeList.get(i);
             LocalData.updateTypeData(type.getId(), type.getIcon(), type.getContent(), i);

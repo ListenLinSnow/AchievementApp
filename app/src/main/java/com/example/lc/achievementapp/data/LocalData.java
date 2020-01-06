@@ -34,6 +34,7 @@ public class LocalData {
     /**
      * 读取所需要的类型的数据列表
      * @param type
+     * @param order
      * @return
      */
     public static List<Achievement> getAchiData(int type, String order){
@@ -58,6 +59,37 @@ public class LocalData {
                 String remarks = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.REMARKS_COLUMN));
                 int status = cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.STATUS_COLUMN));
                 achievementList.add(new Achievement(id, startDate, endDate, title, subtitle, type, attitude, remarks, status));
+            }
+            cursor.close();
+        }
+        return achievementList;
+    }
+
+    /**
+     * 查询统计成就
+     * @param startDays
+     * @param endDays
+     * @return
+     */
+    public static List<Achievement> getAchiData(long startDays, long endDays){
+        List<Achievement> achievementList = new ArrayList<>();
+        SQLiteDatabase db = achiDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(DBHelper.ACHIEVEMENT_TABLE, null, null, null, null, null, null);
+        if(cursor != null) {
+            while (cursor.moveToNext()) {
+                long endDate = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.END_DATE_COLUMN));
+                //事件结算日位于当年年内即可
+                if(endDate >= startDays && endDate <= endDays) {
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.ID_COLUMN));
+                    long startDate = cursor.getLong(cursor.getColumnIndexOrThrow(DBHelper.START_DATE_COLUMN));
+                    String title = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.TITLE_COLUMN));
+                    String subtitle = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.SUBTITLE_COLUMN));
+                    int type = cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.TYPE_COLUMN));
+                    int attitude = cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.ATTITUDE_COLUMN));
+                    String remarks = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.REMARKS_COLUMN));
+                    int status = cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.STATUS_COLUMN));
+                    achievementList.add(new Achievement(id, startDate, endDate, title, subtitle, type, attitude, remarks, status));
+                }
             }
             cursor.close();
         }

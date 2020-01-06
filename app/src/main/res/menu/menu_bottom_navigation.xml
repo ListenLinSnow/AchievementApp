@@ -7,6 +7,11 @@
         android:icon="@mipmap/ic_hourglass"/>
 
     <item
+        android:id="@+id/action_intend"
+        android:title="计划中"
+        android:icon="@mipmap/ic_intend" />
+
+    <item
         android:id="@+id/action_abandoned"
         android:title="@string/menu_bottom_abandoned"
         android:icon="@mipmap/ic_abandon"/>

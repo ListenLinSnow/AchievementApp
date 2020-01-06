@@ -2,6 +2,7 @@ package com.example.lc.achievementapp.activity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,7 +84,7 @@ public class AchievementDetailActivity extends AppCompatActivity {
     }
 
     private void init(){
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
         typeList = LocalData.getTypeListData();
 
         //添加选择的分类
@@ -103,7 +105,8 @@ public class AchievementDetailActivity extends AppCompatActivity {
                     break;
                 }
             }
-            if(achievement.getStatus() != AchievementStatus.ONGOING){
+            //当不为 进行中 和 计划中 的任务
+            if(achievement.getStatus() != AchievementStatus.ONGOING && achievement.getStatus() != AchievementStatus.INTEND){
                 tvSeparator.setVisibility(View.VISIBLE);
                 tvEndDate.setVisibility(View.VISIBLE);
                 ivDelete.setVisibility(View.VISIBLE);
@@ -119,6 +122,7 @@ public class AchievementDetailActivity extends AppCompatActivity {
             etTitle.setText(achievement.getTitle());
             etRemark.setText(achievement.getRemarks());
         }else {
+            //可能为 new 或 intend
             tvSeparator.setVisibility(View.GONE);
             tvEndDate.setVisibility(View.GONE);
             ivDelete.setVisibility(View.GONE);
@@ -248,8 +252,12 @@ public class AchievementDetailActivity extends AppCompatActivity {
                 }
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        //设置最大选择日期，不超过当前日期
-        dialog.getDatePicker().setMaxDate(TimeUtil.getDateTime());
+        //当成就为新建的，或者编辑中的成就为 计划中 ，设置最小选择日期为当前日期，否则设置最大选择日期为当前日期
+        if (action.equals("intend") || (action.equals("edit") && achievement.getStatus() == AchievementStatus.INTEND)){
+            dialog.getDatePicker().setMinDate(TimeUtil.getDateTime());
+        } else {
+            dialog.getDatePicker().setMaxDate(TimeUtil.getDateTime());
+        }
         dialog.show();
     }
 
@@ -259,6 +267,7 @@ public class AchievementDetailActivity extends AppCompatActivity {
     private void showChooseDialog(){
         SingleChooseDialog dialog = new SingleChooseDialog(this);
         dialog.setTit("选择分类");
+        setSelectedItem();
         dialog.setList(itemList);
         dialog.setOnSureBtnClickListener(new SingleChooseDialog.OnSureBtnClickListener() {
             @Override
@@ -278,6 +287,22 @@ public class AchievementDetailActivity extends AppCompatActivity {
     }
 
     /**
+     * 处理选择框内的已选选项
+     */
+    private void setSelectedItem(){
+        if (!tvCategory.getText().toString().equals("类别")) {
+            for (SingleChooseItem<AchievementType> item : itemList) {
+                AchievementType type = (AchievementType) item.getT();
+                if (type.getContent().equals(tvCategory.getText().toString())) {
+                    item.setSelected(true);
+                } else {
+                    item.setSelected(false);
+                }
+            }
+        }
+    }
+
+    /**
      * 添加新成就
      */
     private void addNewAchievement(){
@@ -290,11 +315,12 @@ public class AchievementDetailActivity extends AppCompatActivity {
         }else if(TextUtils.isEmpty(etTitle.getText().toString())){
             showToast("请填写标题");
         }else {
-            if(action.equals("new")) {
+            if(action.equals("ongoing") || action.equals("intend")) {
                 //如果是新建的
                 long startDateTime = TimeUtil.stringToLong(startTime, "yyyy-MM-dd");
-                LocalData.initDBHelper(this);
-                boolean res = LocalData.insertAchiData(startDateTime, 0, etTitle.getText().toString(), etRemark.getText().toString(), ((AchievementType)itemList.get(selectedPosition).getT()).getId(), AchievementStatus.ONGOING);
+                LocalData.initDBHelper(getApplicationContext());
+                int status = action.equals("ongoing") ? AchievementStatus.ONGOING : AchievementStatus.INTEND;
+                boolean res = LocalData.insertAchiData(startDateTime, 0, etTitle.getText().toString(), etRemark.getText().toString(), ((AchievementType)itemList.get(selectedPosition).getT()).getId(), status);
                 if (res) {
                     EventBus.getDefault().post(new ListNotify(true, false));
                 } else {
@@ -312,14 +338,14 @@ public class AchievementDetailActivity extends AppCompatActivity {
      * 更新成就内容
      */
     private void updateAchievementData(){
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
         long startDateTime = TimeUtil.stringToLong(startTime, "yyyy-MM-dd");
         long endDateTime = 0;
         //只有非 进行中 状态才可以更改终止日期
         if(achievement.getStatus() != AchievementStatus.ONGOING) {
              endDateTime = TimeUtil.stringToLong(endTime, "yyyy-MM-dd");
         }
-        if(achievement.getStatus() != AchievementStatus.ONGOING && endDateTime < startDateTime){
+        if(achievement.getStatus() != AchievementStatus.ONGOING && achievement.getStatus() != AchievementStatus.INTEND && endDateTime < startDateTime){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("警告");
             builder.setMessage("结束日期不得早于起始日期！");
@@ -328,7 +354,6 @@ public class AchievementDetailActivity extends AppCompatActivity {
         }else {
             boolean res = LocalData.updateAchiDataContent(achievement.getId(), startDateTime, endDateTime, typeList.get(selectedPosition).getId(), etTitle.getText().toString(), etRemark.getText().toString());
             if (res) {
-                //showToast("更新成功");
                 EventBus.getDefault().post(new ListNotify(true, false));
             } else {
                 showToast("更新失败");
@@ -350,7 +375,6 @@ public class AchievementDetailActivity extends AppCompatActivity {
                 //删除数据
                 LocalData.initDBHelper(getApplicationContext());
                 if(LocalData.deleteAchiData(achievement.getId())){
-                    //showToast("删除成功");
                     EventBus.getDefault().post(new ListNotify(true, false));
                     dialog.dismiss();
                 }else {

@@ -31,6 +31,7 @@
         android:layout_marginRight="@dimen/sixteen"
         android:padding="@dimen/eight"
         android:src="@mipmap/ic_delete_black"
+        android:alpha="0.3"
         android:background="?attr/selectableItemBackground"/>
 
 </RelativeLayout>

@@ -40,6 +40,7 @@ import com.example.lc.achievementapp.common.Constant;
 import com.example.lc.achievementapp.data.LocalData;
 import com.example.lc.achievementapp.fragment.AbandonedFragment;
 import com.example.lc.achievementapp.fragment.CompletedFragment;
+import com.example.lc.achievementapp.fragment.IntendFragment;
 import com.example.lc.achievementapp.fragment.SummaryFragment;
 import com.example.lc.achievementapp.fragment.OngoingFragment;
 import com.example.lc.achievementapp.util.CheckPermissionUtil;
@@ -86,7 +87,8 @@ import static com.example.lc.achievementapp.util.ExcelUtil.initExcel;
 import static com.example.lc.achievementapp.util.ExcelUtil.readExcelData;
 import static com.example.lc.achievementapp.util.ExcelUtil.writeObjListToExcel;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, SlideItemAdapter.OnItemClickListener,
+        View.OnClickListener, Toolbar.OnMenuItemClickListener {
 
     @BindView(R.id.dl_main)
     DrawerLayout dlMain;                                    //整体布局
@@ -123,25 +125,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @BindView(R.id.rl_main_slide_about)
     RelativeLayout rlAbout;                                 //关于
 
+    String coverPath = null, avatarPath = null;
+
     List<AchievementType> typeList = null;
     SlideItemAdapter adapter = null;
 
     OngoingFragment ongoingFragment = null;                 //进行中 成就
-    SummaryFragment summaryFragment = null;                 //计划中 成就
+    IntendFragment intendFragment = null;                   //计划中 成就
     AbandonedFragment abandonedFragment = null;             //已弃坑 成就
     CompletedFragment completedFragment = null;             //已完成 成就
+    SummaryFragment summaryFragment = null;                 //总结 成就
+
     List<Fragment> fragmentList = null;
 
     int lastIndex = -1;
 
     private OnOngoingTypeClickListener onOngoingTypeClickListener = null;
+    private OnIntendTypeClickListener onIntendTypeClickListener = null;
     private OnAbandonedTypeClickListener onAbandonedTypeClickListener = null;
     private OnCompletedTypeClickListener onCompletedTypeClickListener = null;
 
     private static final int ONGOING = 0;
-    private static final int ABANDONED = 1;
-    private static final int COMPLETED = 2;
-    private static final int SUMMARY = 3;
+    private static final int INTEND = 1;
+    private static final int ABANDONED = 2;
+    private static final int COMPLETED = 3;
+    private static final int SUMMARY = 4;
 
     private static final int PICK_COVER = 1;
     private static final int CROP_COVER = 2;
@@ -165,10 +173,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         CheckPermissionUtil.addPermissionsToList(permissionList, CheckPermissionUtil.PERMISSION_STORAGE);
         CheckPermissionUtil.addPermissionsToList(permissionList, CheckPermissionUtil.PERMISSION_CAMERA);
         CheckPermissionUtil.addPermissionsToList(permissionList, CheckPermissionUtil.PERMISSION_PHONE);
-        CheckPermissionUtil.verifyPermissions(this, permissionList);
+        CheckPermissionUtil.verifyPermissions(MainActivity.this, permissionList);
 
         //设置状态栏透明
         StatusBarUtil.setColorForDrawerLayout(this, dlMain, getResources().getColor(R.color.md_blue_500));
+
+        coverPath = getFilesDir() + File.separator + "cover.jpg";
+        avatarPath = getFilesDir() + File.separator + "avatar.jpg";
 
         //设置工具栏
         setSupportActionBar(toolbar);
@@ -183,26 +194,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 dlMain.openDrawer(Gravity.START);
             }
         });
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-                    case R.id.action_search:
-                        startActivity(new Intent(MainActivity.this, SearchActivity.class));
-                        break;
-                }
-                return true;
-            }
-        });
+        toolbar.setOnMenuItemClickListener(this);
 
         //设置封面保存路径
-        if(new File(Constant.COVER_PATH).exists()){
-            rlCover.setBackground(BitmapDrawable.createFromPath(Constant.COVER_PATH));
+        if (new File(coverPath).exists()){
+            rlCover.setBackground(BitmapDrawable.createFromPath(coverPath));
         }
 
         //设置头像保存路径
-        if(new File(Constant.AVATAR_PATH).exists()) {
-            ivAvatar.setImageBitmap(CircleImage.toRoundBitmap(BitmapFactory.decodeFile(Constant.AVATAR_PATH)));
+        if(new File(avatarPath).exists()) {
+            ivAvatar.setImageBitmap(CircleImage.toRoundBitmap(BitmapFactory.decodeFile(avatarPath)));
         }
 
         //设置用户名及个性签名
@@ -220,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         refreshTypeList();
 
         ongoingFragment = new OngoingFragment();
+        intendFragment = new IntendFragment();
         abandonedFragment = new AbandonedFragment();
         completedFragment = new CompletedFragment();
         summaryFragment = new SummaryFragment();
@@ -227,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //初始化并添加四个fragment
         fragmentList = new ArrayList<>();
         fragmentList.add(ongoingFragment);
+        fragmentList.add(intendFragment);
         fragmentList.add(abandonedFragment);
         fragmentList.add(completedFragment);
         fragmentList.add(summaryFragment);
@@ -243,39 +246,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
      * 刷新类型列表
      */
     private void refreshTypeList(){
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
         typeList.clear();
         typeList.addAll(LocalData.getTypeListData());
 
         if(adapter == null) {
             adapter = new SlideItemAdapter(this, typeList);
             rvSlide.setLayoutManager(new LinearLayoutManager(this));
-            adapter.setOnItemClickListener(new SlideItemAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    AchievementType type = typeList.get(position);
-
-                    switch (lastIndex){
-                        case ONGOING:
-                            if(onOngoingTypeClickListener != null){
-                                onOngoingTypeClickListener.onOngoingTypeClick(type.getId());
-                            }
-                            break;
-                        case ABANDONED:
-                            if(onAbandonedTypeClickListener != null){
-                                onAbandonedTypeClickListener.onAbandonedTypeClick(type.getId());
-                            }
-                            break;
-                        case COMPLETED:
-                            if(onCompletedTypeClickListener != null){
-                                onCompletedTypeClickListener.onCompletedTypeClickListener(type.getId());
-                            }
-                            break;
-                    }
-
-                    dlMain.closeDrawers();
-                }
-            });
+            adapter.setOnItemClickListener(this);
             rvSlide.setAdapter(adapter);
         }else {
             adapter.notifyDataSetChanged();
@@ -323,14 +301,27 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 break;
             case R.id.rl_main_slide_all_type:
                 //查询所有分类的成就
-                if(onOngoingTypeClickListener != null){
-                    onOngoingTypeClickListener.onOngoingTypeClick(Constant.ACHIEVEMENT_TYPE_ALL);
-                }
-                if(onAbandonedTypeClickListener != null){
-                    onAbandonedTypeClickListener.onAbandonedTypeClick(Constant.ACHIEVEMENT_TYPE_ALL);
-                }
-                if(onCompletedTypeClickListener != null){
-                    onCompletedTypeClickListener.onCompletedTypeClickListener(Constant.ACHIEVEMENT_TYPE_ALL);
+                switch (lastIndex){
+                    case ONGOING:
+                        if(onOngoingTypeClickListener != null){
+                            onOngoingTypeClickListener.onOngoingTypeClick(Constant.ACHIEVEMENT_TYPE_ALL);
+                        }
+                        break;
+                    case INTEND:
+                        if (onIntendTypeClickListener != null){
+                            onIntendTypeClickListener.onIntendTypeClick(Constant.ACHIEVEMENT_TYPE_ALL);
+                        }
+                        break;
+                    case ABANDONED:
+                        if(onAbandonedTypeClickListener != null){
+                            onAbandonedTypeClickListener.onAbandonedTypeClick(Constant.ACHIEVEMENT_TYPE_ALL);
+                        }
+                        break;
+                    case COMPLETED:
+                        if(onCompletedTypeClickListener != null){
+                            onCompletedTypeClickListener.onCompletedTypeClickListener(Constant.ACHIEVEMENT_TYPE_ALL);
+                        }
+                        break;
                 }
                 dlMain.closeDrawers();
                 break;
@@ -360,6 +351,50 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     /**
+     * 侧边栏适配器的点击事件
+     * @param position
+     */
+    @Override
+    public void onItemClick(int position) {
+        AchievementType type = typeList.get(position);
+
+        switch (lastIndex){
+            case ONGOING:
+                if(onOngoingTypeClickListener != null){
+                    onOngoingTypeClickListener.onOngoingTypeClick(type.getId());
+                }
+                break;
+            case INTEND:
+                if (onIntendTypeClickListener != null){
+                    onIntendTypeClickListener.onIntendTypeClick(type.getId());
+                }
+                break;
+            case ABANDONED:
+                if(onAbandonedTypeClickListener != null){
+                    onAbandonedTypeClickListener.onAbandonedTypeClick(type.getId());
+                }
+                break;
+            case COMPLETED:
+                if(onCompletedTypeClickListener != null){
+                    onCompletedTypeClickListener.onCompletedTypeClickListener(type.getId());
+                }
+                break;
+        }
+
+        dlMain.closeDrawers();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                break;
+        }
+        return true;
+    }
+
+    /**
      * 要修改的信息
      * @param param
      */
@@ -369,9 +404,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //设置标题
         if(param.equals(PersonalInfo.USERNAME)){
             dialog.setTit(R.string.dialog_username_title);
+            dialog.setContent(tvUsername.getText().toString());
         }
         if(param.equals(PersonalInfo.AUTOGRAPH)){
             dialog.setTit(R.string.dialog_autograph_title);
+            dialog.setContent(tvAutograph.getText().toString());
         }
 
         dialog.setOnSureBtnClickListener(new NormalInputDialog.OnSureBtnClickListener() {
@@ -405,7 +442,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
      * 导出excel表格数据
      */
     private void exportExcelData(){
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
         List<Achievement> achievementList = LocalData.getAchiData(Constant.ACHIEVEMENT_TYPE_ALL, null);
         List<AchievementType> typeList = LocalData.getTypeListData();
 
@@ -441,7 +478,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             @Override
             public void onCancelBtnClick(WarningDialog dialog) {
                 dialog.dismiss();
-                finish();
             }
         });
         dialog.show();
@@ -461,7 +497,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     if(list.size() != 0) {
                         Uri sourceUri = list.get(0);
 
-                        Uri destinationUri = Uri.fromFile(new File(Constant.COVER_PATH));
+                        Uri destinationUri = Uri.fromFile(new File(coverPath));
                         UCrop.of(sourceUri, destinationUri)
                                 .withAspectRatio((float)width/(float)height, 1)
                                 .withMaxResultSize(width, height)
@@ -472,10 +508,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case CROP_COVER:
                 //保存裁剪后的图片并设置为封面
                 if(resultCode == RESULT_OK){
-                    if(!new File(Constant.COVER_PATH).exists()){
+                    if(!new File(coverPath).exists()){
                         return;
                     }
-                    rlCover.setBackground(BitmapDrawable.createFromPath(Constant.COVER_PATH));
+                    rlCover.setBackground(BitmapDrawable.createFromPath(coverPath));
                 }
                 break;
             case PICK_AVATAR:
@@ -485,29 +521,28 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     if(list.size() != 0) {
                         Uri sourceUri = list.get(0);
 
-                        Uri destinationUri = Uri.fromFile(new File(Constant.AVATAR_PATH));
+                        Uri destinationUri = Uri.fromFile(new File(avatarPath));
                         UCrop.of(sourceUri, destinationUri)
                                 .withAspectRatio(9, 9)
                                 .withMaxResultSize(640, 640)
                                 .start(this, CROP_AVATAR);
-
                     }
                 }
                 break;
             case CROP_AVATAR:
                 //保存裁剪后的图片并设置为头像
                 if(resultCode == RESULT_OK){
-                    if(!new File(Constant.AVATAR_PATH).exists()){
+                    if(!new File(avatarPath).exists()){
                         return;
                     }
-                    ivAvatar.setImageBitmap(CircleImage.toRoundBitmap(BitmapFactory.decodeFile(Constant.AVATAR_PATH)));
+                    ivAvatar.setImageBitmap(CircleImage.toRoundBitmap(BitmapFactory.decodeFile(avatarPath)));
                 }
                 break;
             case PICK_EXCEL_FILE:
                 if(resultCode == RESULT_OK && data != null){
                     Uri uri = data.getData();
                     String path = FileUtil.getFilePathByUri(MainActivity.this, uri);
-                    ExcelUtil.readExcelData(MainActivity.this, path);
+                    ExcelUtil.readExcelData(this, path);
                 }
                 break;
         }
@@ -520,6 +555,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 if(lastIndex != ONGOING){
                     switchFragment(lastIndex, ONGOING);
                     lastIndex = ONGOING;
+                    toolbar.setVisibility(View.VISIBLE);
+                }
+                return true;
+            case R.id.action_intend:
+                if (lastIndex != INTEND){
+                    switchFragment(lastIndex, INTEND);
+                    lastIndex = INTEND;
                     toolbar.setVisibility(View.VISIBLE);
                 }
                 return true;
@@ -600,6 +642,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         void onOngoingTypeClick(int type);
     }
 
+    public interface OnIntendTypeClickListener{
+        void onIntendTypeClick(int type);
+    }
+
     public interface OnAbandonedTypeClickListener{
         void onAbandonedTypeClick(int type);
     }
@@ -610,6 +656,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void registerOngoingTypeClickListener(OnOngoingTypeClickListener onOngoingTypeClickListener) {
         this.onOngoingTypeClickListener = onOngoingTypeClickListener;
+    }
+
+    public void registerOnIntendTypeClickListener(OnIntendTypeClickListener onIntendTypeClickListener){
+        this.onIntendTypeClickListener = onIntendTypeClickListener;
     }
 
     public void registerAbandonedTypeClickListener(OnAbandonedTypeClickListener onAbandonedTypeClickListener) {

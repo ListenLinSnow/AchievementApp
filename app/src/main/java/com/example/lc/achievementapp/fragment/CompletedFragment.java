@@ -1,5 +1,6 @@
 package com.example.lc.achievementapp.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,6 +52,18 @@ public class CompletedFragment extends Fragment {
     private List<Achievement> achievementList = null;
     private CompleteItemAdapter adapter = null;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = (Context) activity;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,8 +80,6 @@ public class CompletedFragment extends Fragment {
     }
 
     private void init(){
-        context = getContext();
-
         achievementList = new ArrayList<>();
         refreshData(lastType);
 
@@ -78,7 +89,7 @@ public class CompletedFragment extends Fragment {
         adapter.setOnItemClickListener(new CompleteItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(getContext(), AchievementDetailActivity.class);
+                Intent intent = new Intent(context, AchievementDetailActivity.class);
                 intent.putExtra("action", "edit");
                 intent.putExtra("achievement", achievementList.get(position));
                 startActivity(intent);
@@ -92,7 +103,7 @@ public class CompletedFragment extends Fragment {
      */
     private void refreshData(int type){
         achievementList.clear();
-        LocalData.initDBHelper(context);
+        LocalData.initDBHelper(context.getApplicationContext());
         //按完成日期降序查询
         List<Achievement> list = LocalData.getAchiData(type, DBHelper.END_DATE_COLUMN + " desc");
         if(list.size() > 0) {

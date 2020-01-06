@@ -3,6 +3,7 @@ package com.example.lc.achievementapp.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -15,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -43,5 +45,13 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick({R.id.iv_setting_type_back})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.iv_setting_type_back:
+                finish();
+                break;
+        }
+    }
 
 }

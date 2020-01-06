@@ -12,8 +12,7 @@ public class TimeUtil {
      */
     public static long getDateTime(){
         String dateTime = parseTime(System.currentTimeMillis());
-        long time = stringToLong(dateTime, "yyyy-MM-dd");
-        return time;
+        return stringToLong(dateTime, "yyyy-MM-dd");
     }
 
     /**
@@ -49,8 +48,7 @@ public class TimeUtil {
             if (date == null) {
                 return 0;
             } else {
-                long currentTime = dateToLong(date); // date类型转成long类型
-                return currentTime;
+                return dateToLong(date); // date类型转成long类型
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -58,7 +56,7 @@ public class TimeUtil {
         return 0;
     }
 
-    public static Date stringToDate(String strTime, String formatType)
+    private static Date stringToDate(String strTime, String formatType)
             throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat(formatType);
         Date date = null;
@@ -77,8 +75,7 @@ public class TimeUtil {
      * @return
      */
     public static int differToTwoDays(long day1, long day2){
-        int day = (int) ((day2 - day1) / 1000 / 60 / 60 / 24);
-        return day;
+        return (int) ((day2 - day1) / 1000 / 60 / 60 / 24);
     }
 
 }

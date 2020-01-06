@@ -69,7 +69,7 @@ public class ShowAchiAdapter extends RecyclerView.Adapter {
             }
         }
 
-        if(achievement.getStatus() == AchievementStatus.ONGOING) {
+        if(achievement.getStatus() == AchievementStatus.ONGOING || achievement.getStatus() == AchievementStatus.INTEND) {
             holder.tvTime.setText(TimeUtil.parseTime(achievement.getStartDate()));
         }else {
             holder.tvTime.setText(TimeUtil.parseTime(achievement.getEndDate()));

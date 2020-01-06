@@ -55,7 +55,6 @@ public class OngoingItemAdapter extends RecyclerView.Adapter {
         OngoingItemViewHolder holder = (OngoingItemViewHolder) viewHolder;
         holder.swipe.setSwipeEnable(true);
         //当完成某个成就的动画后，该界面的子项起始x点有可能是错的，故需要纠正为正常的起点
-        //holder.swipe.setTranslationX(0);
         holder.item.setTranslationX(0);
 
         holder.tvTitle.setText(achievement.getTitle());

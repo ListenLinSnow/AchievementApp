@@ -1,5 +1,7 @@
 package com.example.lc.achievementapp.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +21,7 @@ import com.example.lc.achievementapp.common.AchievementStatus;
 import com.example.lc.achievementapp.common.Constant;
 import com.example.lc.achievementapp.data.DBHelper;
 import com.example.lc.achievementapp.data.LocalData;
+import com.example.lc.achievementapp.util.TimeUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,8 +47,24 @@ public class SummaryFragment extends Fragment {
     private List<Achievement> allAchievementList = null;
     private List<Achievement> completedAchievementList = null;
     private List<Achievement> abandonedAchievementList = null;
+    private List<Achievement> ongoingAchievementList = null;
+    private List<Achievement> intendAchievementList = null;
     private List<AchievementType> typeList = null;
     private List<TotalData> totalDataList = null;
+
+    private Context context;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = (Context) activity;
+    }
 
     @Nullable
     @Override
@@ -66,6 +85,8 @@ public class SummaryFragment extends Fragment {
         allAchievementList = new ArrayList<>();
         completedAchievementList = new ArrayList<>();
         abandonedAchievementList = new ArrayList<>();
+        ongoingAchievementList = new ArrayList<>();
+        intendAchievementList = new ArrayList<>();
         typeList = new ArrayList<>();
         totalDataList = new ArrayList<>();
 
@@ -73,7 +94,7 @@ public class SummaryFragment extends Fragment {
     }
 
     private void refreshData(){
-        LocalData.initDBHelper(getContext());
+        LocalData.initDBHelper(context.getApplicationContext());
 
         showInfo = "";
         allAchievementList.clear();
@@ -82,7 +103,14 @@ public class SummaryFragment extends Fragment {
         typeList.clear();
         totalDataList.clear();
 
-        allAchievementList = LocalData.getAchiData(Constant.ACHIEVEMENT_TYPE_ALL, null);
+        //只统计当年年内结算的事情
+        String startOfYear = TimeUtil.parseTime(System.currentTimeMillis(), "yyyy") + "-01-01";
+        long day1 = TimeUtil.stringToLong(startOfYear, "yyyy-MM-dd");
+        String endOfYear = TimeUtil.parseTime(System.currentTimeMillis(), "yyyy") + "-12-31";
+        long day2 = TimeUtil.stringToLong(endOfYear, "yyyy-MM-dd");
+
+        allAchievementList = LocalData.getAchiData(day1, day2);
+
         typeList = LocalData.getTypeListData();
         if(allAchievementList.size() > 0) {
             int shortestId = -1;
@@ -108,6 +136,9 @@ public class SummaryFragment extends Fragment {
                         }
                     }
 
+                    //介于影视类（如电影）容易在一天内完成，故排除此类
+                    if (LocalData.getTypeById(achievement.getType()).getContent().equals("影视"))
+                        continue;
                     period = achievement.getEndDate() - achievement.getStartDate();
                     //最长时长及事件id
                     if(period >= longestTime) {
@@ -126,12 +157,27 @@ public class SummaryFragment extends Fragment {
                 if (achievement.getStatus() == AchievementStatus.ABANDONED) {
                     abandonedAchievementList.add(achievement);
                 }
+                if (achievement.getStatus() == AchievementStatus.ONGOING){
+                    ongoingAchievementList.add(achievement);
+                }
+                if (achievement.getStatus() == AchievementStatus.INTEND){
+                    intendAchievementList.add(achievement);
+                }
             }
 
             //事件数量统计信息
             showInfo += "这一年，一共计划了" + formatTypeOrNumber(allAchievementList.size()) + "件事情<br>"
-                    + "其中，完成了" + formatTypeOrNumber(completedAchievementList.size()) + "件事情<br>"
-                    + "弃坑了" + formatTypeOrNumber(abandonedAchievementList.size()) + "件事情<br>";
+                    + "其中，完成了" + formatTypeOrNumber(completedAchievementList.size()) + "件事情<br>";
+
+            if (abandonedAchievementList.size() != 0){
+                showInfo += "弃坑了" + formatTypeOrNumber(abandonedAchievementList.size()) + "件事情<br>";
+            }
+            if (ongoingAchievementList.size() != 0){
+                showInfo += "有" + formatTypeOrNumber(ongoingAchievementList.size()) + "件事情正在进行<br>";
+            }
+            if (intendAchievementList.size() != 0){
+                showInfo += "有" + formatTypeOrNumber(intendAchievementList.size()) + "件事情还未开始<br>";
+            }
 
             int index = 0;
             int maxSum = totalDataList.get(index).getSum();
@@ -151,15 +197,35 @@ public class SummaryFragment extends Fragment {
                 if(i == index) continue;
                 showInfo += formatTypeOrNumber(totalDataList.get(i).getTypeContent()) + "类：" + formatTypeOrNumber(totalDataList.get(i).getSum()) + "件<br>";
             }
+
             showInfo += "<br>";
 
             //存在完成的事件时，优先显示最长时长事件
             if(longestId != -1 && completedAchievementList.size() > 0) {
                 showInfo += "完成时长最长的是" + formatTypeOrNumber(allAchievementList.get(longestId).getTitle()) + "，共计" + formatTypeOrNumber(longestTime / 1000 / 3600 / 24 + 1) + "天<br>";
             }
-            //完成的事件数量大于1时，方显示最短时长事件
+            //完成的事件数量大于1时，方显示最短时长事件，且需要统计是否存在同长时间事件
             if(shortestId != -1 && completedAchievementList.size() > 1) {
-                showInfo += "完成时长最短的是" + formatTypeOrNumber(allAchievementList.get(shortestId).getTitle()) + "，共计" + formatTypeOrNumber(shortestTime / 1000 / 3600 / 24 + 1) + "天";
+                //showInfo += "完成时长最短的是" + formatTypeOrNumber(allAchievementList.get(shortestId).getTitle()) + "，共计" + formatTypeOrNumber(shortestTime / 1000 / 3600 / 24 + 1) + "天";
+                String shortestInfo = "";
+                for (int i = 0; i < completedAchievementList.size(); i++){
+                    achievement = completedAchievementList.get(i);
+
+                    //介于影视类（如电影）容易在一天内完成，故排除此类
+                    if (LocalData.getTypeById(achievement.getType()).getContent().equals("影视"))
+                        continue;
+
+                    period = achievement.getEndDate() - achievement.getStartDate();
+                    if (period == shortestTime){
+                        shortestInfo += formatTypeOrNumber(achievement.getTitle()) + "，<br>";
+                    }
+                }
+                //如果首次出现与末次出现的位置不一致，则证明存在多个并存时长最短事件
+                if (shortestInfo.indexOf("，") != shortestInfo.lastIndexOf(",")) {
+                    showInfo += "完成时长最短的是" + shortestInfo + "各计" + formatTypeOrNumber(shortestTime / 1000 / 3600 / 24 + 1) + "天";
+                } else {
+                    showInfo += "完成时长最短的是" + shortestInfo + "总计" + formatTypeOrNumber(shortestTime / 1000 / 3600 / 24 + 1) + "天";
+                }
             }
         }else {
             showInfo += "今年还未完成过任何成就";

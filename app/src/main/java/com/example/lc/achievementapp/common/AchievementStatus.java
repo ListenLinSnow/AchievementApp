@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 @IntDef({
-        AchievementStatus.INTEND,           //计划中（此项已抛弃）
+        AchievementStatus.INTEND,           //计划中
         AchievementStatus.ONGOING,          //进行中
         AchievementStatus.COMPLETED,        //已完成
         AchievementStatus.ABANDONED         //已弃坑

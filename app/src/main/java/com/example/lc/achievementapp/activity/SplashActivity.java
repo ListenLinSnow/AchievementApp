@@ -3,7 +3,10 @@ package com.example.lc.achievementapp.activity;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -28,6 +31,10 @@ import com.example.lc.achievementapp.util.WindowViewUtil;
 import com.jaeger.library.StatusBarUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 import butterknife.BindView;
@@ -43,6 +50,8 @@ public class SplashActivity extends AppCompatActivity {
     TextView tvSecondWord;
 
     private int duration = 1000;                        //动画时长
+
+    private MyHandler myHandler;
 
     private static final int START_FIRST = 1;
     private static final int START_SECOND = 2;
@@ -65,27 +74,29 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);*/
         StatusBarUtil.setTransparent(this);
 
+        myHandler = new MyHandler(this);
+
         setFont();
 
         initBaseData();
 
         //标语动画
-        handler.postDelayed(new Runnable() {
+        myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                handler.sendEmptyMessage(START_FIRST);
+                myHandler.sendEmptyMessage(START_FIRST);
             }
         }, 0);
-        handler.postDelayed(new Runnable() {
+        myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                handler.sendEmptyMessage(START_SECOND);
+                myHandler.sendEmptyMessage(START_SECOND);
             }
         }, 0);
-        handler.postDelayed(new Runnable() {
+        myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                handler.sendEmptyMessage(START_MAIN);
+                myHandler.sendEmptyMessage(START_MAIN);
             }
         }, duration * 2);
     }
@@ -119,10 +130,14 @@ public class SplashActivity extends AppCompatActivity {
         String endOfYear = TimeUtil.parseTime(System.currentTimeMillis(), "yyyy") + "-12-31";
         long day2 = TimeUtil.stringToLong(endOfYear, "yyyy-MM-dd");
         int days = TimeUtil.differToTwoDays(day1, day2);
-        tvDeadLine.setText(Html.fromHtml("距离年末还有<font color='#ff0000'><big><big><big><big>" + days + "</big></big></big></big></font>天"));
+        if (days > 0) {
+            tvDeadLine.setText(Html.fromHtml("距离年末还有<font color='#ff0000'><big><big><big><big>" + days + "</big></big></big></big></font>天"));
+        } else {
+            tvDeadLine.setText(Html.fromHtml("今天已经是年末了！"));
+        }
 
         //初始化添加部分分类
-        LocalData.initDBHelper(this);
+        LocalData.initDBHelper(getApplicationContext());
         if(LocalData.getTypeListData().size() == 0){
             LocalData.insertTypeData(FileUtil.resourceIdToUri(this, R.mipmap.ic_read).toString(), "阅读", 1);
             LocalData.insertTypeData(FileUtil.resourceIdToUri(this, R.mipmap.ic_video).toString(), "影视", 2);
@@ -135,8 +150,10 @@ public class SplashActivity extends AppCompatActivity {
         if(!new File(Constant.APP_FOLDER_PATH).exists()){
             new File(Constant.APP_FOLDER_PATH).mkdirs();
         }
-        if(!new File(Constant.TYPE_PATH).exists()){
-            new File(Constant.TYPE_PATH).mkdirs();
+
+        String typePath = getFilesDir() + File.separator + "type";
+        if(!new File(typePath).exists()){
+            new File(typePath).mkdirs();
         }
     }
 
@@ -149,23 +166,42 @@ public class SplashActivity extends AppCompatActivity {
         animator.setDuration(duration * 2).start();
     }
 
-    private Handler handler = new Handler(){
+    private void startMainActivity(){
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
+    private static class MyHandler extends Handler{
+
+        private WeakReference<Context> reference;
+
+        public MyHandler(Context context){
+            reference = new WeakReference<>(context);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case START_FIRST:
-                    startAnimation(tvFirstWord);
-                    break;
-                case START_SECOND:
-                    startAnimation(tvSecondWord);
-                    break;
-                case START_MAIN:
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();
-                    break;
+            SplashActivity activity = (SplashActivity) reference.get();
+            if (activity != null){
+                switch (msg.what){
+                    case START_FIRST:
+                        activity.startAnimation(activity.tvFirstWord);
+                        break;
+                    case START_SECOND:
+                        activity.startAnimation(activity.tvSecondWord);
+                        break;
+                    case START_MAIN:
+                        activity.startMainActivity();
+                        break;
+                }
             }
         }
-    };
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myHandler.removeCallbacksAndMessages(null);
+    }
 
 }

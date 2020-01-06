@@ -4,12 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mypopsy.widget.FloatingSearchView
-        android:id="@+id/fsv_search"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hint="输入搜索内容"
-        app:fsv_icon="@mipmap/ic_search_small"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/md_blue_500">
+
+        <ImageView
+                android:id="@+id/iv_search_back"
+                android:layout_width="@dimen/forty_eight"
+                android:layout_height="@dimen/forty_eight"
+                android:padding="@dimen/ten"
+                android:src="@mipmap/ic_arrow_back_white"
+                android:foreground="?attr/selectableItemBackground"/>
+
+        <com.mypopsy.widget.FloatingSearchView
+                android:id="@+id/fsv_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="输入搜索内容"
+                app:fsv_icon="@mipmap/ic_search_small"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_search_num"

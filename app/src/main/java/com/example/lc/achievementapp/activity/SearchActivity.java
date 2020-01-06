@@ -8,6 +8,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +32,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SearchActivity extends AppCompatActivity {
 
+    @BindView(R.id.iv_search_back)
+    ImageView ivBack;
     @BindView(R.id.fsv_search)
     FloatingSearchView searchView;
     @BindView(R.id.tv_search_num)
@@ -57,8 +62,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void init(){
-        LocalData.initDBHelper(this);
-        achievementList = LocalData.getAchiData(Constant.ACHIEVEMENT_TYPE_ALL, DBHelper.ID_COLUMN + " asc");
+        LocalData.initDBHelper(getApplicationContext());
+        achievementList = LocalData.getAchiData(Constant.ACHIEVEMENT_TYPE_ALL, DBHelper.ID_COLUMN + " desc");
         typeList = LocalData.getTypeListData();
         showList = new ArrayList<>();
 
@@ -121,10 +126,19 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick({R.id.iv_search_back})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.iv_search_back:
+                finish();
+                break;
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ListNotify listNotify){
         if(listNotify.isRefreshAchievementList()){
-            achievementList = LocalData.getAchiData(Constant.ACHIEVEMENT_TYPE_ALL, DBHelper.ID_COLUMN + " asc");
+            achievementList = LocalData.getAchiData(Constant.ACHIEVEMENT_TYPE_ALL, DBHelper.ID_COLUMN + " desc");
             filterAchievement(searchView.getText().toString());
         }
     }

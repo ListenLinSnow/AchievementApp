@@ -20,6 +20,7 @@
     <string name="menu_bottom_summary">总结</string>
 
     <string name="motto">心配するな，お前ならできる</string>
-    <string name="copyright">Copyright@2019 QingMi All Rights Reserved.</string>
+    <string name="copyright_prefix">Copyright@</string>
+    <string name="copyright_suffix">QingMi All Rights Reserved.</string>
 
 </resources>
